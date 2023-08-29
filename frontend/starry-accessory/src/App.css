@@ -1,0 +1,52 @@
+:root {
+  --mainOpacity: rgba(0, 0, 0, 0.55);
+}
+
+.header {
+  background-image: url("./images/logo1resize.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: var(--mainOpacity);
+  height: 70VH !important;
+}
+
+.dark-overlay {
+  background-color: rgba(0, 0, 0, 0.35);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.main-color {
+  background-color: #33cde4;
+}
+
+.col-image-left {
+  background-image: url("./images/earrings/black-beauty.JPG");
+  height: 25em !important;
+}
+
+.col-image-right {
+  background-image: url("./images/earrings/blue-jelly.JPG");
+  height: 25em !important;
+}
+
+.contact-image {
+  background-image: url("./images/earrings/key-to-soul.jpg");
+  height: 25em !important;
+  width: "720";
+}
+
+.homepage-carousel-title {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+
+.main-container {
+  max-width: 1500px;
+  margin: 0 auto;
+}
