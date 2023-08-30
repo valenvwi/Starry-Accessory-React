@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import ProductModel from "../../../models/ProductModel";
 
 export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
   return (
-    <div className="card my-3 shadow p-5 py-3 bg-body rounded">
+    <div className="card my-2 shadow p-5 py-3 bg-body rounded">
       <div className="row">
         <div className="col-md-4">
           <div className="d-none d-lg-block mt-2">
@@ -40,7 +41,7 @@ export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
             )}
           </div>
         </div>
-        <div className="col-md-6 gx-5">
+        <div className="col-md-5 gx-5">
           <div className="card-body">
             <h5 className="card-title">{props.product.name}</h5>
             <h4>
@@ -50,9 +51,12 @@ export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
           </div>
         </div>
         <div className="col-md-2 d-flex justify-content-center align-items-center">
-          <a className="btn btn-md main-color text-white" href="#">
+          <Link
+            className="btn btn-md main-color text-white"
+            to={`/checkout/${props.product.id}`}
+          >
             View details
-          </a>
+          </Link>
         </div>
       </div>
     </div>

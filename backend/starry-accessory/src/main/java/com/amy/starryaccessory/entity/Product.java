@@ -15,39 +15,37 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name="product")
+@Table(name = "product")
 @Data
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
 
-
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="unit_price")
+    @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-    @Column(name="stock")
+    @Column(name = "stock")
     private Long stock;
 
-    @Column(name="available_stock")
+    @Column(name = "available_stock")
     private Long availableStock;
 
-    @Column(name="image_url")
+    @Column(name = "image_url")
     private String imageUrl;
-    
-    @Column (name="category")
+
+    @Column(name = "category")
     private String category;
-    
-    @Column(name="date_created")
+
+    @Column(name = "date_created")
     @CreationTimestamp
     private Date dateCreated;
 
-    
 }
