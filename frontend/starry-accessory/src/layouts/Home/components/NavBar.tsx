@@ -1,13 +1,19 @@
+import { NavLink } from "react-router-dom";
+
 export const Navbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light py-3">
+    <nav className="navbar navbar-expand-lg navbar-light py-3 mx-3">
       <div className="container-fluid text-white">
         <span>
           {" "}
-          <img src={require("./../../../images/logo3resize.jpg")} 
-          width="100"
-          height="70"
-          alt="" />
+          <NavLink className="nav-link mx-3" to="/">
+            <img
+              src={require("./../../../images/logo3resize.jpg")}
+              width="100"
+              height="70"
+              alt=""
+            />
+          </NavLink>
         </span>
         <button
           className="navbar-toggler"
@@ -23,22 +29,22 @@ export const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link mx-3" href="#">
+              <NavLink className="nav-link mx-3" to="/">
                 Home
-              </a>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link mx-3" href="#">
+              <NavLink className="nav-link mx-3" to="/search">
                 Search items
-              </a>
+              </NavLink>
             </li>
           </ul>
           <ul className="navbar-nav ms-auto">
             <li className="nav-item mx-3">
-              <a type="button" className="nav-link" href="#">
+              <NavLink type="button" className="nav-link" to="/">
                 {" "}
                 Sign in
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>

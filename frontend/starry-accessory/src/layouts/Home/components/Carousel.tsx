@@ -1,6 +1,8 @@
 import { CarouselProducts } from "./CarouselProducts";
 import { useEffect, useState } from "react";
 import ProductModel from "../../../models/ProductModel";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import { Link } from "react-router-dom";
 
 export const Carousel = () => {
 
@@ -45,9 +47,7 @@ export const Carousel = () => {
 
   if (isLoading) {
     return (
-      <div className="container m-5">
-        <p>Loading...</p>
-      </div>
+      <SpinnerLoading />
     );
   }
 
@@ -129,9 +129,9 @@ export const Carousel = () => {
       </div>
 
       <div className="homepage-carousel-title mt-3">
-        <a className="btn btn-outline-secondary btn-lg" href="#">
+        <Link className="btn btn-outline-secondary btn-lg" to="/search">
           View More
-        </a>
+        </Link>
       </div>
     </div>
   );

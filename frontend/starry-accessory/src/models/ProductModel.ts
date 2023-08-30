@@ -6,8 +6,8 @@ class ProductModel {
   stock: number;
   availableStock: number;
   imageUrl: string;
-  dateCreated: Date;
   category: string;
+  dateCreated: Date;
 
   constructor(
     id: number,
@@ -17,8 +17,8 @@ class ProductModel {
     stock: number,
     availableStock: number,
     imageUrl: string,
-    dateCreated: Date,
-    category: string
+    category: string,
+    dateCreated: Date
   ) {
     this.id = id;
     this.name = name;

@@ -10,8 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -24,9 +23,6 @@ public class Product {
     @Column(name="id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="category_id", nullable = false)
-    private ProductCategory category;
 
     @Column(name="name")
     private String name;
@@ -45,6 +41,9 @@ public class Product {
 
     @Column(name="image_url")
     private String imageUrl;
+    
+    @Column (name="category")
+    private String category;
     
     @Column(name="date_created")
     @CreationTimestamp

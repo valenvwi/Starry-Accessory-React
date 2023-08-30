@@ -1,12 +1,12 @@
 import { Carousel } from "./components/Carousel";
 import { MainPageContent } from "./components/MainPageContent";
 import { Contact } from "./components/Contact";
-import { TopItem } from "./components/TopItem";
+import { Banner } from "./components/Banner";
 
 export const HomePage = () => {
   return (
     <>
-      <TopItem />
+      <Banner />
       <Carousel />
       <MainPageContent />
       <Contact />
