@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const MainPageContent = () => {
   return (
     <div>
@@ -25,6 +27,12 @@ export const MainPageContent = () => {
             <div className="ml-2">
               <h1>Our collection</h1>
               <p className="lead">New Autumn collection is out!</p>
+              <Link
+                className="btn main-color btn-lg text-white"
+                to="/search"
+              >
+                Check out more
+              </Link>
             </div>
           </div>
           <div className="col-sm-6 col-md-6">
@@ -54,6 +62,9 @@ export const MainPageContent = () => {
             <div className="mt-2">
               <h1>Our collection</h1>
               <p className="lead">New Autumn collection is out!</p>
+              <Link className="btn main-color btn-lg text-white" to="/search">
+                Hello
+              </Link>
             </div>
           </div>
         </div>

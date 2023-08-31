@@ -14,7 +14,8 @@ export const SearchPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState("");
   const [searchUrl, setSearchUrl] = useState("");
-  const [categorySelection, setCategorySelection] = useState('Product category');
+  const [categorySelection, setCategorySelection] =
+    useState("Product category");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,7 +25,10 @@ export const SearchPage = () => {
       if (searchUrl === "") {
         url = `${baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`;
       } else {
-        let searchWithPage = searchUrl.replace('<pageNumber>', `${currentPage-1}`)
+        let searchWithPage = searchUrl.replace(
+          "<pageNumber>",
+          `${currentPage - 1}`
+        );
         url = baseUrl + searchWithPage;
       }
 
@@ -50,7 +54,7 @@ export const SearchPage = () => {
           availableStock: responseData[key].availableStock,
           imageUrl: responseData[key].imageUrl,
           category: responseData[key].category,
-          dateCreated: responseData[key].dateCreated
+          dateCreated: responseData[key].dateCreated,
         });
       }
       setProducts(loadedProducts);
@@ -86,23 +90,26 @@ export const SearchPage = () => {
         `/search/findByNameContaining?name=${search}&page=<pageNumber>&size=${productsPerPage}`
       );
     }
-    setCategorySelection('Product category')
+    setCategorySelection("Product category");
   };
 
+  console.log(searchUrl);
   const categoryField = (value: string) => {
     setCurrentPage(1);
     if (
-        value.toLowerCase() === "new arrivals" ||
-        value.toLowerCase() === "best sellers" ||
-        value.toLowerCase() === "now trending" 
+      value.toLowerCase() === "new arrivals" ||
+      value.toLowerCase() === "best sellers" ||
+      value.toLowerCase() === "now trending"
     ) {
-        setCategorySelection(value);
-        setSearchUrl(`/search/findByCategory?category=${value}&page=<pageNumber>&size=${productsPerPage}`)
+      setCategorySelection(value);
+      setSearchUrl(
+        `/search/findByCategory?category=${value}&page=<pageNumber>&size=${productsPerPage}`
+      );
     } else {
-        setCategorySelection('All');
-        setSearchUrl(`?page=<pageNumber>&size=${productsPerPage}`)
+      setCategorySelection("All");
+      setSearchUrl(`?page=<pageNumber>&size=${productsPerPage}`);
     }
-  }
+  };
 
   const indexOfLastProduct: number = currentPage * productsPerPage;
   const indexOfFirstProduct: number = indexOfLastProduct - productsPerPage;
@@ -150,17 +157,17 @@ export const SearchPage = () => {
                   className="dropdown-menu"
                   aria-labelledby="dropdownMenuButton1"
                 >
-                  <li onClick={() => categoryField('New Arrivals')}>
+                  <li onClick={() => categoryField("New Arrivals")}>
                     <a className="dropdown-item" href="#">
                       New Arrivals
                     </a>
                   </li>
-                  <li onClick={() => categoryField('Best Sellers')}>
+                  <li onClick={() => categoryField("Best Sellers")}>
                     <a className="dropdown-item" href="#">
                       Best Sellers
                     </a>
                   </li>
-                  <li onClick={() => categoryField('Now Trending')}>
+                  <li onClick={() => categoryField("Now Trending")}>
                     <a className="dropdown-item" href="#">
                       Now Trending
                     </a>

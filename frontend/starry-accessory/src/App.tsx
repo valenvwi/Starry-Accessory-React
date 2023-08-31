@@ -28,12 +28,19 @@ export const App = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={authHandler}>
+      <Security
+        oktaAuth={oktaAuth}
+        restoreOriginalUri={restoreOriginalUri}
+        onAuthRequired={authHandler}
+      >
         <Navbar />
         <div className="flex-grow-1">
           <Routes>
-          <Route path="/login" element={<LoginWidget config={oktaConfig} />} />
-          <Route path="/login/callback" element={<LoginCallback />} />
+            <Route
+              path="/login"
+              element={<LoginWidget config={oktaConfig} />}
+            />
+            <Route path="/login/callback" element={<LoginCallback />} />
             <Route path="/search" element={<SearchPage />} />
             <Route
               path="/checkout/:productId"

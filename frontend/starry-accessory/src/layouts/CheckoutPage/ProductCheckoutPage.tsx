@@ -2,14 +2,23 @@ import ProductModel from "../../models/ProductModel";
 import { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { CheckoutBox } from "./CheckoutBox";
+import { useOktaAuth } from "@okta/okta-react";
 
 export const ProductCheckoutPage = () => {
+
+  const { authState } = useOktaAuth();
   const [product, setProduct] = useState<ProductModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
 
   const productId = window.location.pathname.split("/")[2];
   // check the product id from localhost:3000/checkout/<productId>
+
+  const [shoppingCartCount, setShoppingCartCount] = useState(0);
+  const [isLoadingShoppingCart, setIsLoadingShoppingCart] = useState(true);
+
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  const [isLoadingAddedToCart, setIsLoadingAddedToCart] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -39,9 +48,67 @@ export const ProductCheckoutPage = () => {
       setIsLoading(false);
       setHttpError(error.message);
     });
-  }, []);
+  }, [isAddedToCart]);
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchUserShoppingCartCount = async() => {
+      if (authState && authState.isAuthenticated){
+        const url= `http://localhost:8080/products/secure/shoppingcart/count`;
+        const requestOptions = {
+          method: 'GET',
+          headers:{
+            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        };
+        const shoppingCartCountResponse = await fetch(url, requestOptions);
+        if (!shoppingCartCountResponse.ok){
+          throw new Error("Something is wrong");
+        }
+        const shoppingCartCountResponseJson = await shoppingCartCountResponse.json();
+        setShoppingCartCount(shoppingCartCountResponseJson);
+      }
+      setIsLoadingShoppingCart(false);
+
+    }
+    fetchUserShoppingCartCount().catch((error: any) => {
+      setIsLoadingShoppingCart(false);
+      setHttpError(error.message);
+    })
+  }, [authState, isAddedToCart])
+
+  useEffect(() => {
+    const fetchUserCheckedOutProduct = async () => {
+        if (authState && authState.isAuthenticated) {
+            const url = `http://localhost:8080/products/secure/isaddedtocart/byuser?productId=${productId}`;
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            const productCheckedOut = await fetch(url, requestOptions);
+
+            // if (productCheckedOut.ok) {
+            //     throw new Error('Something went wrong!');
+            // }
+
+            const productCheckedOutResponseJson = await productCheckedOut.json();
+            console.log(productCheckedOutResponseJson);
+            setIsAddedToCart(productCheckedOutResponseJson);
+
+            console.log(isAddedToCart);
+        }
+        setIsLoadingAddedToCart(false);
+    }
+    fetchUserCheckedOutProduct().catch((error: any) => {
+        setIsLoadingAddedToCart(false);
+        setHttpError(error.message);
+    })
+}, [authState]);
+
+  if (isLoading || isLoadingShoppingCart || isLoadingAddedToCart) {
     return <SpinnerLoading />;
   }
 
@@ -51,6 +118,22 @@ export const ProductCheckoutPage = () => {
         <p>{httpError}</p>
       </div>
     );
+  }
+
+  async function addToCart(){
+    const url =`http://localhost:8080/products/secure/addtocart?productId=${product?.id}`
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+          'Content-Type': 'application/json'
+      }
+    };
+    const cartResponse = await fetch(url, requestOptions);
+    if(!cartResponse.ok){
+      throw new Error("something is wong");
+    }
+    setIsAddedToCart(true);
   }
 
   return (
@@ -81,7 +164,7 @@ export const ProductCheckoutPage = () => {
               <p className="lead"> {product?.description}</p>
             </div>
           </div>
-          <CheckoutBox product={product} mobile={false} />
+          <CheckoutBox product={product} mobile={false} shoppingCartCount={shoppingCartCount}isAuthenticated={authState?.isAuthenticated} isAddedToCart= {isAddedToCart} addToCart={addToCart}/>
         </div>
         <hr />
       </div>
@@ -111,7 +194,7 @@ export const ProductCheckoutPage = () => {
           </div>
         </div>
         <hr />
-        <CheckoutBox product={product} mobile={true} />
+        <CheckoutBox product={product} mobile={true} shoppingCartCount={shoppingCartCount} isAuthenticated={authState?.isAuthenticated} isAddedToCart= {isAddedToCart} addToCart={addToCart}/>
       </div>
     </div>
   );
