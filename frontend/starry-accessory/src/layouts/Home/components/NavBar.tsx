@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import { library } from "@fortawesome/fontawesome-svg-core";
 
 export const Navbar = () => {
   const { oktaAuth, authState } = useOktaAuth();
@@ -49,6 +50,13 @@ export const Navbar = () => {
                 Search items
               </NavLink>
             </li>
+            {authState.isAuthenticated && (
+              <li className="nav-item">
+                <NavLink className="nav-link mx-3" to="/shoppingcart">
+                  Shopping cart
+                </NavLink>
+              </li>
+            )}
           </ul>
           <ul className="navbar-nav ms-auto">
             <li className="nav-item mx-3">

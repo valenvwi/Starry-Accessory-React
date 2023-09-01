@@ -3,7 +3,7 @@ import ProductModel from "../../models/ProductModel";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 
-export const CheckoutBox: React.FC<{
+export const CartBox: React.FC<{
   product: ProductModel | undefined,
   mobile: boolean,
   shoppingCartCount: number,

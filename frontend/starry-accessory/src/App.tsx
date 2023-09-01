@@ -5,11 +5,12 @@ import { HomePage } from "./layouts/Home/HomePage";
 import { Footer } from "./layouts/Home/components/Footer";
 import { SearchPage } from "./layouts/SearchPage/SearchPage";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { ProductCheckoutPage } from "./layouts/CheckoutPage/ProductCheckoutPage";
+import { ProductDetailPage } from "./layouts/ProductDetail/ProductDetailPage";
 import { oktaConfig } from "./lib/oktaConfig";
 import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { LoginCallback, Security } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
+import { ShoppingCart } from "./layouts/ShoppingCart/ShoppingCart";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -43,8 +44,12 @@ export const App = () => {
             <Route path="/login/callback" element={<LoginCallback />} />
             <Route path="/search" element={<SearchPage />} />
             <Route
+              path="/shoppingcart"
+              element={<ShoppingCart />}
+            ></Route>
+            <Route
               path="/checkout/:productId"
-              element={<ProductCheckoutPage />}
+              element={<ProductDetailPage />}
             ></Route>
             <Route path="/" element={<HomePage />}></Route>
           </Routes>

@@ -1,8 +1,12 @@
 package com.amy.starryaccessory.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -61,4 +65,16 @@ public class ProductService {
         return checkoutRepository.findProductsByUserEmail(userEmail).size();
     }
 
+    public List<Product> viewshoppingCart(String userEmail) throws Exception {
+
+        List<Product> shoppingCart = new ArrayList<>();
+        List<Long> productIdList = new ArrayList<>();
+        List<Checkout> checkoutList = checkoutRepository.findProductsByUserEmail(userEmail);
+
+        for (Checkout i : checkoutList) {
+            productIdList.add(i.getProductId());
+        }
+        shoppingCart = productRepository.findProductsByProductIds(productIdList);
+        return shoppingCart;
+    }
 }
