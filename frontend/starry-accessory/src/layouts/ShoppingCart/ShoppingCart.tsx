@@ -4,6 +4,7 @@ import { useOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
 import { ShoppingCartItems } from "./ShoppingCartItems";
 import { OrderSummaryBox } from "./OrderSummaryBox";
+import { useFetchShoppingCartCount } from "../Utils/useFetchShoppingCartCount";
 
 export const ShoppingCart = () => {
   const { authState } = useOktaAuth();
@@ -11,8 +12,10 @@ export const ShoppingCart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(1);
-  const [shoppingCartCount, setShoppingCartCount] = useState(0);
+//   const [shoppingCartCount, setShoppingCartCount] = useState(0);
   const [isLoadingShoppingCart, setIsLoadingShoppingCart] = useState(true);
+  const [shoppingCartTotal, setShoppingCartTotal] = useState(0);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,39 +55,45 @@ export const ShoppingCart = () => {
         setIsLoading(false);
       }
 
-      fetchProducts().catch((error: any) => {
-        setIsLoading(false);
-        setHttpError(error.message);
-      });
     };
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserShoppingCartCount = async () => {
-      const url = `http://localhost:8080/products/secure/shoppingcart/count`;
-      const requestOptions = {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      };
-      const shoppingCartCountResponse = await fetch(url, requestOptions);
-      if (!shoppingCartCountResponse.ok) {
-        throw new Error("Something is wrong");
-      }
-      const shoppingCartCountResponseJson =
-        await shoppingCartCountResponse.json();
-      setShoppingCartCount(shoppingCartCountResponseJson);
-    };
-    setIsLoadingShoppingCart(false);
-
-    fetchUserShoppingCartCount().catch((error: any) => {
-      setIsLoadingShoppingCart(false);
+    fetchProducts().catch((error: any) => {
+      setIsLoading(false);
       setHttpError(error.message);
     });
   }, []);
+
+
+const {shoppingCartCount,
+    isLoadingShoppingCart: isLoadingShoppingCartCount,
+    httpError: shoppingCartCountHttpError,
+  } = useFetchShoppingCartCount(isAddedToCart);
+
+  useEffect(() => {
+    const fetchUserShoppingCartTotal = async () => {
+      if (authState && authState.isAuthenticated) {
+        const url = `http://localhost:8080/products/secure/shoppingcarttotal`;
+        const requestOptions = {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        };
+        const shoppingCartTotalResponse = await fetch(url, requestOptions);
+        if (!shoppingCartTotalResponse.ok) {
+          throw new Error("Something is wrong");
+        }
+        const shoppingCartTotalResponseJson =
+          await shoppingCartTotalResponse.json();
+        setShoppingCartTotal(shoppingCartTotalResponseJson);
+      }
+      setIsLoadingShoppingCart(false);
+    };
+    fetchUserShoppingCartTotal().catch((error: any) => {
+      setIsLoadingShoppingCart(false);
+      setHttpError(error.message);
+    });
+  }, [authState]);
 
   return (
     <>
@@ -102,6 +111,7 @@ export const ShoppingCart = () => {
                 <OrderSummaryBox
                   mobile={false}
                   shoppingCartCount={shoppingCartCount}
+                  shoppingCartTotal={shoppingCartTotal}
                   isAuthenticated={authState?.isAuthenticated}
                 />
               </div>

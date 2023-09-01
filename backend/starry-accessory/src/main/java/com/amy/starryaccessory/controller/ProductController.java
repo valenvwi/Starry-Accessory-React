@@ -1,5 +1,6 @@
 package com.amy.starryaccessory.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class ProductController {
     public List<Product> viewShoppingCart(@RequestHeader(value = "Authorization") String token) throws Exception {
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         return productService.viewshoppingCart(userEmail);
+    }
+
+    @GetMapping("/secure/shoppingcarttotal")
+    public BigDecimal shoppingCartTotal(@RequestHeader(value = "Authorization") String token) throws Exception {
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        return productService.ShoppingCartTotal(userEmail);
     }
 
     @PutMapping("/secure/addtocart")

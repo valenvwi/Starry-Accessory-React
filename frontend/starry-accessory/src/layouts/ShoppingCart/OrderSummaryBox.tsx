@@ -6,8 +6,9 @@ export const OrderSummaryBox: React.FC<{
   mobile: boolean;
   shoppingCartCount: number;
   isAuthenticated: any;
+  shoppingCartTotal: number;
 }> = (props) => {
-  const { oktaAuth, authState } = useOktaAuth();
+  const { authState } = useOktaAuth();
 
   if (!authState) {
     return <SpinnerLoading />;
@@ -27,7 +28,7 @@ export const OrderSummaryBox: React.FC<{
           </div>
           <div className="d-flex justify-content-between py-2">
             <div>Subtotal: </div>
-            <div>CHF 100.00</div>
+            <div>CHF {props.shoppingCartTotal}</div>
           </div>
           <div className="d-flex justify-content-between py-2">
             <div>Shipping: </div>
@@ -36,7 +37,7 @@ export const OrderSummaryBox: React.FC<{
           <hr />
           <div className="d-flex justify-content-between py-2">
             <div>Total: </div>
-            <div>CHF100.00</div>
+            <div>CHF {props.shoppingCartTotal}</div>
           </div>
         </div>
 

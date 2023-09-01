@@ -1,5 +1,6 @@
 package com.amy.starryaccessory.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -76,5 +77,23 @@ public class ProductService {
         }
         shoppingCart = productRepository.findProductsByProductIds(productIdList);
         return shoppingCart;
+    }
+
+    public BigDecimal ShoppingCartTotal(String userEmail){
+        BigDecimal shoppingCartTotal = BigDecimal.ZERO;
+        List<Product> shoppingCart = new ArrayList<>();
+        List<Long> productIdList = new ArrayList<>();
+        List<Checkout> checkoutList = checkoutRepository.findProductsByUserEmail(userEmail);
+
+        for (Checkout i : checkoutList) {
+            productIdList.add(i.getProductId());
+        }
+        shoppingCart = productRepository.findProductsByProductIds(productIdList);
+
+        for (Product i : shoppingCart){
+            shoppingCartTotal = shoppingCartTotal.add(i.getUnitPrice());
+        }
+        return shoppingCartTotal;
+
     }
 }

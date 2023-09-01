@@ -30,7 +30,7 @@ export const Pagination: React.FC<{
   }
   return (
     <nav aria-label="...">
-      <ul className="pagination">
+      <ul className="pagination my-4 d-flex justify-content-center">
         <li className="page-item" onClick={() => props.paginate(1)}>
           <button className="page-link">FIrst Page</button>
         </li>
