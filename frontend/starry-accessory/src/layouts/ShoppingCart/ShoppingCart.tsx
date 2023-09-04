@@ -1,22 +1,12 @@
 import { useEffect, useState } from "react";
-import ProductModel from "../../models/Product";
 import { useOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
 import { ShoppingCartItems } from "./components/ShoppingCartItems";
 import { OrderSummaryBox } from "./components/OrderSummaryBox";
-import { useFetchShoppingCartCount } from "../Utils/useFetchShoppingCartCount";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 
 export const ShoppingCart = () => {
   const { authState } = useOktaAuth();
-  const [products, setProducts] = useState<ProductModel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [httpError, setHttpError] = useState(null);
-  const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(1);
-  //   const [shoppingCartCount, setShoppingCartCount] = useState(0);
-  const [isLoadingShoppingCart, setIsLoadingShoppingCart] = useState(true);
-  const [shoppingCartTotal, setShoppingCartTotal] = useState(0);
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
   const {
     cartItems,
@@ -28,12 +18,12 @@ export const ShoppingCart = () => {
 
   return (
     <>
-      {totalAmountOfProducts > 0 ? (
+      {cartItems.length > 0 ? (
         <>
           <div className="container">
             <div className="row">
               <div className="col-sm-12 col-md-8">
-                <h5 className="px-3"> Shopping cart:</h5>
+                <h3 className="pt-4 px-3"> Shopping cart</h3>
                 {cartItems.map((item) => (
                   <ShoppingCartItems
                     cartItem={item}
@@ -55,11 +45,11 @@ export const ShoppingCart = () => {
           </div>
         </>
       ) : (
-        <div className="container">
-          <h3>Your shopping cart is empty</h3>
+        <div className="container d-flex justify-content-center flex-column align-items-center">
+          <h3 className="my-5 pt-5 ">Your shopping cart is empty</h3>
           <Link
             type="button"
-            className="btn main-color btn-md px-4 me-md-2 fw-bold text-white"
+            className="btn main-color btn-md p-3 fw-bold text-white"
             to="/search"
           >
             Shop now

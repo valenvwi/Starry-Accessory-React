@@ -1,5 +1,6 @@
 package com.amy.starryaccessory.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +11,13 @@ import com.amy.starryaccessory.dto.PurchaseResponse;
 
 import com.amy.starryaccessory.service.CheckoutService;
 
+@CrossOrigin("http://localhost:3000")
 @RestController
-@RequestMapping("/checkout")
+@RequestMapping("checkout")
 public class CheckoutController {
 
     private CheckoutService checkoutService;
 
-    // it's optional to put autowire when there's only one constructor
     public CheckoutController(CheckoutService checkoutService) {
         this.checkoutService = checkoutService;
     }

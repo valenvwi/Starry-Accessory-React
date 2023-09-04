@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 import { ChangeEvent, useRef } from "react";
 import { OrderHistory } from "../../models/OrderHistory";
@@ -21,7 +21,8 @@ const { oktaAuth, authState } = useOktaAuth();
   const shippingZipCodeInputRef = useRef<HTMLInputElement>(null);
   const billingZipCodeInputRef = useRef<HTMLInputElement>(null);
 
-  const { cartItems, totalPrice, totalQuantity } = useLocalShoppingCart();
+  const { cartItems, totalPrice, totalQuantity, resetCart } = useLocalShoppingCart();
+  const navigate = useNavigate();
 
   function submitOrder(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,7 +86,7 @@ const { oktaAuth, authState } = useOktaAuth();
         const response = await fetch(url, requestOptions);
 
         if (response.ok) {
-          // Handle a successful response here
+          resetCartAndGoHome();
         } else {
           // Handle errors here, e.g., response.status
         }
@@ -94,6 +95,11 @@ const { oktaAuth, authState } = useOktaAuth();
       }
     }
   };
+
+  const resetCartAndGoHome = () => {
+    resetCart();
+    navigate('/');
+  }
 
   function setBillingAddress(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {

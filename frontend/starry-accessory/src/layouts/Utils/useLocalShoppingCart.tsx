@@ -97,6 +97,11 @@ export const useLocalShoppingCart = () => {
     }
   }
 
+  function resetCart(){
+    localStorage.setItem("shoppingCartData", JSON.stringify([]));
+    setCartItems([]);
+  }
+
   const totalPrice = getTotalPrice(cartItems);
   const totalQuantity = getTotalQuantity(cartItems);
 
@@ -107,5 +112,6 @@ export const useLocalShoppingCart = () => {
     addProductToCart,
     increaseProductFromCart,
     removeProductFromCart,
+    resetCart
   };
 };
