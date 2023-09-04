@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ProductModel from "../../../models/ProductModel";
+import ProductModel from "../../../models/Product";
 
 export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
   return (

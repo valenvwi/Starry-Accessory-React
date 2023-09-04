@@ -1,4 +1,4 @@
-import ProductModel from "../../models/ProductModel";
+import ProductModel from "../../models/Product";
 import { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchProduct } from "./components/SearchProduct";

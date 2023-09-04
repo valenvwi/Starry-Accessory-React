@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
-import ProductModel from "../../models/ProductModel";
+import ProductModel from "../../models/Product";
 import { useOktaAuth } from "@okta/okta-react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { CartItem } from "../../models/CartItem";
 
 export const CartBox: React.FC<{
   product: ProductModel | undefined;
   mobile: boolean;
-  shoppingCartCount: number;
+  totalQuantity: number;
   isAuthenticated: any;
-  isAddedToCart: boolean;
-  addToCart: any;
+  cartItems: CartItem[];
+  addToCart: (product: ProductModel) => void;
 }> = (props) => {
   const { oktaAuth, authState } = useOktaAuth();
 
@@ -19,25 +20,32 @@ export const CartBox: React.FC<{
 
   function buttonRender() {
     if (props.isAuthenticated) {
-      if (!props.isAddedToCart) {
+      const productIsInCart = props.cartItems.some(
+        (item) => item.id === props.product?.id
+      );
+      if (!productIsInCart) {
         return (
           <button
-            onClick={() => props.addToCart()}
-            className="btn btn-success btn-lg"
+            onClick={() => {
+              if (props.product) {
+                props.addToCart(props.product);
+              }
+            }}
+            className="btn btn-success btn-lg mt-2 mb-5"
           >
             Add to cart
           </button>
         );
       } else {
         return (
-          <p>
+          <p className=" mt-2 mb-5">
             <b>Item already added to your cart</b>
           </p>
         );
       }
     }
     return (
-      <Link to="/login" className="btn btn-success btn-lg">
+      <Link to="/login" className="btn btn-success btn-lg my-3">
         Log in
       </Link>
     );
@@ -49,11 +57,6 @@ export const CartBox: React.FC<{
     >
       <div className="card-body container">
         <div className="mt-3">
-          <p>
-            <b>{props.shoppingCartCount} </b>
-            items in your shopping cart
-          </p>
-          <hr />
           {props.product && props.product.availableStock > 0 ? (
             <h4 className="text-success py-3">Available</h4>
           ) : (
@@ -62,11 +65,16 @@ export const CartBox: React.FC<{
         </div>
         {buttonRender()}
 
-        <hr />
         {!authState.isAuthenticated ? (
           <p className="mt-3">Log in to be able to add this into the cart.</p>
         ) : (
-          <p className="mt-3">❤️❤️❤️❤️❤️</p>
+          <>
+            <hr />
+            <p className="mt-4">
+              <b>{props.totalQuantity} </b>
+              items in your shopping cart
+            </p>
+          </>
         )}
       </div>
     </div>

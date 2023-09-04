@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useOktaAuth } from "@okta/okta-react";
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 
 export const OrderSummaryBox: React.FC<{
   mobile: boolean;
@@ -42,7 +42,7 @@ export const OrderSummaryBox: React.FC<{
         </div>
 
         <Link
-          to="/"
+          to="/checkout"
           className="btn btn-success btn-lg d-flex justify-content-center align-items-center"
         >
           Check out

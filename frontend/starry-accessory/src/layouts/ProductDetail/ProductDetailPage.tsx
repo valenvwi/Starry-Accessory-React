@@ -4,6 +4,7 @@ import { CartBox } from "./CartBox";
 import { useOktaAuth } from "@okta/okta-react";
 import { useFetchProduct } from "../Utils/useFetchProduct";
 import { useFetchShoppingCartCount } from "../Utils/useFetchShoppingCartCount";
+import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 
 export const ProductDetailPage = () => {
   const { authState } = useOktaAuth();
@@ -14,6 +15,7 @@ export const ProductDetailPage = () => {
 
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isLoadingAddedToCart, setIsLoadingAddedToCart] = useState(true);
+
 
   const {
     product,
@@ -27,60 +29,15 @@ export const ProductDetailPage = () => {
     httpError: shoppingCartCountHttpError,
   } = useFetchShoppingCartCount(isAddedToCart);
 
-  useEffect(() => {
-    const fetchUserCheckedOutProduct = async () => {
-      if (authState && authState.isAuthenticated) {
-        const url = `http://localhost:8080/products/secure/isaddedtocart/byuser?productId=${productId}`;
-        const requestOptions = {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        };
-        const productCheckedOut = await fetch(url, requestOptions);
+  const {
+    cartItems,
+    totalPrice,
+    totalQuantity,
+    addProductToCart,
+    removeProductFromCart,
+  } = useLocalShoppingCart()
 
-        const productCheckedOutResponseJson = await productCheckedOut.json();
-        console.log(productCheckedOutResponseJson);
-        setIsAddedToCart(productCheckedOutResponseJson);
 
-        console.log(isAddedToCart);
-      }
-      setIsLoadingAddedToCart(false);
-    };
-    fetchUserCheckedOutProduct().catch((error: any) => {
-      setIsLoadingAddedToCart(false);
-      setHttpError(error.message);
-    });
-  }, [authState]);
-
-  if (isProductLoading || isLoadingShoppingCart || isLoadingAddedToCart) {
-    return <SpinnerLoading />;
-  }
-
-  if (httpError || productHttpError || shoppingCartCountHttpError) {
-    return (
-      <div className="container m-5">
-        <p>{httpError || productHttpError || shoppingCartCountHttpError}</p>
-      </div>
-    );
-  }
-
-  async function addToCart() {
-    const url = `http://localhost:8080/products/secure/addtocart?productId=${product?.id}`;
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    };
-    const cartResponse = await fetch(url, requestOptions);
-    if (!cartResponse.ok) {
-      throw new Error("something is wong");
-    }
-    setIsAddedToCart(true);
-  }
 
   return (
     <div>
@@ -113,13 +70,12 @@ export const ProductDetailPage = () => {
           <CartBox
             product={product}
             mobile={false}
-            shoppingCartCount={shoppingCartCount}
+            totalQuantity={totalQuantity}
             isAuthenticated={authState?.isAuthenticated}
-            isAddedToCart={isAddedToCart}
-            addToCart={addToCart}
+            cartItems={cartItems}
+            addToCart={addProductToCart}
           />
         </div>
-        <hr />
       </div>
       <div className="container d-lg-none mt-5">
         <div className="d-flex justify-content-center align-items-center">
@@ -150,10 +106,10 @@ export const ProductDetailPage = () => {
         <CartBox
           product={product}
           mobile={true}
-          shoppingCartCount={shoppingCartCount}
+          totalQuantity={totalQuantity}
           isAuthenticated={authState?.isAuthenticated}
-          isAddedToCart={isAddedToCart}
-          addToCart={addToCart}
+          cartItems={cartItems}
+          addToCart={addProductToCart}
         />
       </div>
     </div>

@@ -1,11 +1,10 @@
 import { CarouselProducts } from "./CarouselProducts";
 import { useEffect, useState } from "react";
-import ProductModel from "../../../models/ProductModel";
+import ProductModel from "../../../models/Product";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { Link } from "react-router-dom";
 
 export const Carousel = () => {
-
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
@@ -38,7 +37,7 @@ export const Carousel = () => {
       setProducts(loadedProducts);
       setIsLoading(false);
     };
-    
+
     fetchProducts().catch((error: any) => {
       setIsLoading(false);
       setHttpError(error.message);
@@ -46,9 +45,7 @@ export const Carousel = () => {
   }, []);
 
   if (isLoading) {
-    return (
-      <SpinnerLoading />
-    );
+    return <SpinnerLoading />;
   }
 
   if (httpError) {
@@ -72,26 +69,23 @@ export const Carousel = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              {products.slice(0,2).map(product => (
+              {products.slice(0, 2).map((product) => (
                 <CarouselProducts product={product} key={product.id} />
-              )
-                )}
+              ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-            {products.slice(2,4).map(product => (
+              {products.slice(2, 4).map((product) => (
                 <CarouselProducts product={product} key={product.id} />
-              )
-                )}
+              ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-            {products.slice(4,6).map(product => (
+              {products.slice(4, 6).map((product) => (
                 <CarouselProducts product={product} key={product.id} />
-              )
-                )}
+              ))}
             </div>
           </div>
         </div>

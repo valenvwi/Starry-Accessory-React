@@ -18,9 +18,11 @@ export const Footer = () => {
               All products
             </Link>
           </li>
-          {/* <li className="nav-item">
-            {/* <FontAwesomeIcon icon={faInstagram} style={{color: "#e68ebd"}} /> */}
-          {/* </li>  */}
+          <li className="nav-item">
+            <a href="https://www.instagram.com/starry_accessory_macau/" className="nav-link px-2">
+            {/* @ts-ignore */}
+            <FontAwesomeIcon icon={faInstagram} style={{ color: "#e68ebd" }} /></a>
+          </li>
         </ul>
       </footer>
     </div>

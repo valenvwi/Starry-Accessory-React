@@ -54,3 +54,13 @@
   color: #33cde4;
   font-weight: 700;
 }
+
+
+.icon{
+  font-size: 28px;
+  color: #33cde4;
+}
+
+.icon-minus-margin{
+  margin-left: -14px;
+}
