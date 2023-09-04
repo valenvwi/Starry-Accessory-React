@@ -1,35 +1,23 @@
 import { useEffect, useState } from "react";
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { CartBox } from "./CartBox";
 import { useOktaAuth } from "@okta/okta-react";
 import { useFetchProduct } from "../Utils/useFetchProduct";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 
 export const ProductDetailPage = () => {
-  const { authState } = useOktaAuth();
-  const [httpError, setHttpError] = useState(null);
-
-  const productId = window.location.pathname.split("/")[2];
-  // check the product id from localhost:3000/checkout/<productId>
-
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
-  const [isLoadingAddedToCart, setIsLoadingAddedToCart] = useState(true);
+const { authState } = useOktaAuth();
+const productId = window.location.pathname.split("/")[2];
 
 
   const {
-    product,
-    isLoading: isProductLoading,
-    httpError: productHttpError,
+    product
   } = useFetchProduct(productId);
 
   const {
     cartItems,
-    totalPrice,
     totalQuantity,
-    addProductToCart,
-    removeProductFromCart,
+    addProductToCart
   } = useLocalShoppingCart()
-
 
 
   return (

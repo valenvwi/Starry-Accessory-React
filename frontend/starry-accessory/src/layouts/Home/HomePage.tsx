@@ -1,6 +1,6 @@
 import { Carousel } from "./components/Carousel";
 import { MainPageContent } from "./components/MainPageContent";
-import { Contact } from "./components/Contact";
+import { Follow } from "./components/Follow";
 import { Banner } from "./components/Banner";
 
 export const HomePage = () => {
@@ -9,7 +9,7 @@ export const HomePage = () => {
       <Banner />
       <Carousel />
       <MainPageContent />
-      <Contact />
+      <Follow />
     </>
   );
 };

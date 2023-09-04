@@ -16,9 +16,6 @@ export const MainPageContent = () => {
                 Our owner is a hospitality professional working with a great
                 sence of art.
               </p>
-              <a className="btn main-color btn-lg text-white" href="#">
-                Check out more
-              </a>
             </div>
           </div>
         </div>
@@ -52,9 +49,6 @@ export const MainPageContent = () => {
                 Our owner is a hospitality professional working with a great
                 sense of art.
               </p>
-              <a className="btn main-color btn-lg text-white" href="#">
-                Check out more
-              </a>
             </div>
           </div>
           <div className="m-2">
@@ -63,7 +57,7 @@ export const MainPageContent = () => {
               <h1>Our collection</h1>
               <p className="lead">New Autumn collection is out!</p>
               <Link className="btn main-color btn-lg text-white" to="/search">
-                Hello
+              Check out more
               </Link>
             </div>
           </div>

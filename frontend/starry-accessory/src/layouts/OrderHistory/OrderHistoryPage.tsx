@@ -1,12 +1,10 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useEffect, useState } from "react";
-import { Order } from "../../models/Order";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { OrderHistory } from "../../models/OrderHistory";
 import { OrderHistoryTable } from "./OrderHistoryTable";
 
 export const OrderHistoryPage = () => {
-  const [userEmail, setUserEmail] = useState();
   const { oktaAuth, authState } = useOktaAuth();
   const [orders, setOrders] = useState<OrderHistory[]>();
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(0);
@@ -100,10 +98,10 @@ export const OrderHistoryPage = () => {
       <h3 className="my-3">Order history</h3>
       {orders && orders.length > 0 ? (
         <div>
-          <table className="table table-striped">
-            <thead className="thead-dark">
+          <table className="table table-striped mt-4">
+            <thead>
               <tr>
-              <th scope="col"> </th>
+                <th scope="col"> </th>
                 <th scope="col"> Date</th>
                 <th scope="col"> Total Price</th>
                 <th scope="col"> Total Quantity</th>

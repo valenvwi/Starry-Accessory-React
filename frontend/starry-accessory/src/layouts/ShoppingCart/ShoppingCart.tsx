@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useOktaAuth } from "@okta/okta-react";
 import { Link } from "react-router-dom";
 import { ShoppingCartItems } from "./components/ShoppingCartItems";

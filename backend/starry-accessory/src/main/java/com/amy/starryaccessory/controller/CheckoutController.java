@@ -32,7 +32,7 @@ public class CheckoutController {
     }
 
     @GetMapping("/getEmail")
-    public String userEmail (@RequestHeader(value = "Authorization") String token) throws Exception {
+    public String userEmail(@RequestHeader(value = "Authorization") String token) throws Exception {
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         return userEmail;
     }
