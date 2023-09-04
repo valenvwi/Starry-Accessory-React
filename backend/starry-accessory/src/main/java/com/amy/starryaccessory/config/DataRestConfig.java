@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import com.amy.starryaccessory.entity.Order;
 import com.amy.starryaccessory.entity.Product;
 
 @Configuration
@@ -25,6 +26,7 @@ public class DataRestConfig implements RepositoryRestConfigurer {
                 config.exposeIdsFor(Product.class);
 
                 disableHttpMethods(Product.class, config, theUnsupportedActions);
+                disableHttpMethods(Order.class, config, theUnsupportedActions);
 
                 cors.addMapping(config.getBasePath() + "/**")
                                 .allowedOrigins(theAllowedOrigins);

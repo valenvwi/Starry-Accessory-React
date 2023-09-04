@@ -3,7 +3,6 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { CartBox } from "./CartBox";
 import { useOktaAuth } from "@okta/okta-react";
 import { useFetchProduct } from "../Utils/useFetchProduct";
-import { useFetchShoppingCartCount } from "../Utils/useFetchShoppingCartCount";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 
 export const ProductDetailPage = () => {
@@ -22,12 +21,6 @@ export const ProductDetailPage = () => {
     isLoading: isProductLoading,
     httpError: productHttpError,
   } = useFetchProduct(productId);
-
-  const {
-    shoppingCartCount,
-    isLoadingShoppingCart,
-    httpError: shoppingCartCountHttpError,
-  } = useFetchShoppingCartCount(isAddedToCart);
 
   const {
     cartItems,
