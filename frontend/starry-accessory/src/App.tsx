@@ -11,7 +11,7 @@ import { OktaAuth, toRelativeUrl } from "@okta/okta-auth-js";
 import { LoginCallback, Security } from "@okta/okta-react";
 import LoginWidget from "./Auth/LoginWidget";
 import { ShoppingCart } from "./layouts/ShoppingCart/ShoppingCart";
-import { Checkout2 } from "./layouts/CheckoutPage/Checkout2";
+import { Checkout } from "./layouts/CheckoutPage/Checkout";
 import { OrderHistoryPage } from "./layouts/OrderHistory/OrderHistoryPage";
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -46,8 +46,8 @@ export const App = () => {
             <Route path="/login/callback" element={<LoginCallback />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/shoppingcart" element={<ShoppingCart />}></Route>
-            <Route path="/checkout2" element={<Checkout2 />}></Route>
-            <Route path="/orderhistory" element={<OrderHistoryPage/>}></Route>
+            <Route path="/checkout" element={<Checkout />}></Route>
+            <Route path="/orderhistory" element={<OrderHistoryPage />}></Route>
             <Route
               path="/checkout/:productId"
               element={<ProductDetailPage />}

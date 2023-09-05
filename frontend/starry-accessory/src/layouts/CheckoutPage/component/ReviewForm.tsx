@@ -6,7 +6,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { useOktaAuth } from "@okta/okta-react";
 import { useLocalShoppingCart } from "../../Utils/useLocalShoppingCart";
-import { useNavigate } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { Address } from "../../../models/Address";
 import { Customer } from "../../../models/Customer";
@@ -14,16 +13,16 @@ import { PaymentDetail } from "../../../models/PaymentDetail";
 
 type Props = {
   handleBack: () => void;
-  customer: Customer;
-  shippingAddress: Address;
-  payment: PaymentDetail;
+  customer?: Customer;
+  shippingAddress?: Address;
+  billingAddress?: Address;
+  payment?: PaymentDetail;
+  onsubmit: () => void;
 };
 
-export const ReviewForm: any = (props: Props) => {
+export const ReviewForm = (props: Props) => {
   const { oktaAuth, authState } = useOktaAuth();
-  const { cartItems, totalPrice, totalQuantity, resetCart } =
-    useLocalShoppingCart();
-  const navigate = useNavigate();
+  const { cartItems, totalPrice, totalQuantity } = useLocalShoppingCart();
 
   return (
     <React.Fragment>
@@ -53,8 +52,15 @@ export const ReviewForm: any = (props: Props) => {
             {props.customer?.firstName} {props.customer?.lastName}
           </Typography>
           <Typography gutterBottom>
-            {props.shippingAddress.street}, {props.shippingAddress.city} ,
-            {props.shippingAddress.zipCode}, {props.shippingAddress.country}
+            {props.shippingAddress?.street}, {props.shippingAddress?.city} ,
+            {props.shippingAddress?.zipCode}, {props.shippingAddress?.country}
+          </Typography>
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            Billing
+          </Typography>
+          <Typography gutterBottom>
+            {props.billingAddress?.street}, {props.billingAddress?.city} ,
+            {props.billingAddress?.zipCode}, {props.billingAddress?.country}
           </Typography>
         </Grid>
         <Grid item container direction="column" xs={12} sm={6}>
@@ -62,15 +68,15 @@ export const ReviewForm: any = (props: Props) => {
             Payment details
           </Typography>
           <Grid container>
-            <React.Fragment key={props.payment.nameOnCard}>
+            <React.Fragment key={props.payment?.nameOnCard}>
               <Grid item xs={12}>
                 <Typography gutterBottom>
-                  Card type: {props.payment.cardType}
+                  Card type: {props.payment?.cardType}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom>
-                  Cardholder: {props.payment.nameOnCard}
+                  Cardholder: {props.payment?.nameOnCard}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -80,8 +86,8 @@ export const ReviewForm: any = (props: Props) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography gutterBottom>
-                  Expiry date: {props.payment.expirationMonth} /{" "}
-                  {props.payment.expirationYear}
+                  Expiry date: {props.payment?.expirationMonth} /{" "}
+                  {props.payment?.expirationYear}
                 </Typography>
               </Grid>
             </React.Fragment>
@@ -101,7 +107,7 @@ export const ReviewForm: any = (props: Props) => {
         <Button
           variant="contained"
           type="button"
-          // onClick={submitForm}
+          onClick={props.onsubmit}
           sx={{ mt: 3, ml: 1 }}
         >
           Submit

@@ -11,7 +11,7 @@ import { useLocalShoppingCart } from "../../Utils/useLocalShoppingCart";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Address } from "../../../models/Address";
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { Box, Button } from "@mui/material";
 
 const validationSchema = Yup.object().shape({
@@ -40,12 +40,33 @@ const validationSchema = Yup.object().shape({
     .min(2, "Zip Code is too short!")
     .max(20, "Zip Code is too long!")
     .required("Zip Code is required"),
+  billingStreet: Yup.string()
+    .min(2, "Street is too short!")
+    .max(20, "Street is too long!")
+    .required("Street is required"),
+  billingCity: Yup.string()
+    .min(2, "City is too short!")
+    .max(20, "City is too long!")
+    .required("City is required"),
+  billingCountry: Yup.string()
+    .min(2, "Country is too short!")
+    .max(20, "Country is too long!")
+    .required("Country is required"),
+  billingZipCode: Yup.string()
+    .min(2, "Zip Code is too short!")
+    .max(20, "Zip Code is too long!")
+    .required("Zip Code is required"),
 });
 
 type Props = {
   customer?: Customer;
   shippingAddress?: Address;
-  onsubmit: (customer: Customer, shippAddress: Address) => void;
+  billingAddress?: Address;
+  onsubmit: (
+    customer: Customer,
+    shippAddress: Address,
+    billingAddress: Address
+  ) => void;
 };
 
 export const AddressForm = (props: Props) => {
@@ -56,6 +77,7 @@ export const AddressForm = (props: Props) => {
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<Customer>();
   const [shippingAddress, setShippingAddress] = useState<Address>();
+  const [billingAddress, setbillingAddress] = useState<Address>();
 
   const formik = useFormik({
     initialValues: {
@@ -66,6 +88,10 @@ export const AddressForm = (props: Props) => {
       shippingCity: props.shippingAddress?.city || "",
       shippingCountry: props.shippingAddress?.country || "",
       shippingZipCode: props.shippingAddress?.zipCode || "",
+      billingStreet: props.billingAddress?.street || "",
+      billingCity: props.billingAddress?.city || "",
+      billingCountry: props.billingAddress?.country || "",
+      billingZipCode: props.billingAddress?.zipCode || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -80,14 +106,36 @@ export const AddressForm = (props: Props) => {
       shippingAddress.city = values.shippingCity;
       shippingAddress.country = values.shippingCountry;
       shippingAddress.zipCode = values.shippingZipCode;
-      props.onsubmit(customer, shippingAddress);
+
+      let billingAddress = new Address();
+      billingAddress.street = values.billingStreet;
+      billingAddress.city = values.billingCity;
+      billingAddress.country = values.billingCountry;
+      billingAddress.zipCode = values.billingZipCode;
+      props.onsubmit(customer, shippingAddress, billingAddress);
     },
   });
+
+  function setBillingAsShipping(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      formik.setFieldValue("billingStreet", formik.values.shippingStreet);
+      formik.setFieldValue("billingCity", formik.values.shippingCity);
+      formik.setFieldValue("billingCountry", formik.values.shippingCountry);
+      formik.setFieldValue("billingZipCode", formik.values.shippingZipCode);
+      console.log("checked");
+    } else {
+      formik.setFieldValue("billingStreet", "");
+      formik.setFieldValue("billingCity", "");
+      formik.setFieldValue("billingCountry", "");
+      formik.setFieldValue("billingZipCode", "");
+      console.log("not checked");
+    }
+  }
 
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        Personal Information
       </Typography>
       <Formik
         initialValues={{
@@ -98,6 +146,10 @@ export const AddressForm = (props: Props) => {
           shippingCity: "",
           shippingCountry: "",
           shippingZipCode: "",
+          billingStreet: "",
+          billingCity: "",
+          billingCountry: "",
+          billingZipCode: "",
         }}
         validationSchema={validationSchema}
         onSubmit={formik.submitForm}
@@ -159,6 +211,8 @@ export const AddressForm = (props: Props) => {
                   helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
+
+              <h5 className="mx-4 pt-5">Shipping Address</h5>
 
               <Grid item xs={12}>
                 <TextField
@@ -258,9 +312,104 @@ export const AddressForm = (props: Props) => {
                       color="secondary"
                       name="saveAddress"
                       value="yes"
+                      onChange={(e) => {
+                        setBillingAsShipping(e);
+                      }}
                     />
                   }
                   label="Use this address for payment details"
+                />
+              </Grid>
+
+              <h5 className="mx-4 pt-5">Billing Address</h5>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  id="billingStreet"
+                  name="billingStreet"
+                  label="Street"
+                  fullWidth
+                  autoComplete="billing address-line1"
+                  variant="standard"
+                  value={formik.values.billingStreet}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.billingStreet &&
+                    Boolean(formik.errors.billingStreet)
+                  }
+                  helperText={
+                    formik.touched.billingStreet && formik.errors.billingStreet
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  id="billingCity"
+                  name="billingCity"
+                  label="City"
+                  fullWidth
+                  autoComplete="billing address-line1"
+                  variant="standard"
+                  value={formik.values.billingCity}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.billingCity &&
+                    Boolean(formik.errors.billingCity)
+                  }
+                  helperText={
+                    formik.touched.billingCity && formik.errors.billingCity
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  id="billingCountry"
+                  name="billingCountry"
+                  label="Country"
+                  fullWidth
+                  autoComplete="billing address-line1"
+                  variant="standard"
+                  value={formik.values.billingCountry}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.billingCountry &&
+                    Boolean(formik.errors.billingCountry)
+                  }
+                  helperText={
+                    formik.touched.billingCountry &&
+                    formik.errors.billingCountry
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  id="billingZipCode"
+                  name="billingZipCode"
+                  label="Zip Code"
+                  fullWidth
+                  autoComplete="billing address-line1"
+                  variant="standard"
+                  value={formik.values.billingZipCode}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.billingZipCode &&
+                    Boolean(formik.errors.billingZipCode)
+                  }
+                  helperText={
+                    formik.touched.billingZipCode &&
+                    formik.errors.billingZipCode
+                  }
                 />
               </Grid>
             </Grid>

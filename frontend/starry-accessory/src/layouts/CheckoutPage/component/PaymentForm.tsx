@@ -5,11 +5,16 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Formik, Form, useFormik } from "formik";
-import { Customer } from "../../../models/Customer";
-import { useOktaAuth } from "@okta/okta-react";
 import * as Yup from "yup";
-import { Box, Button } from "@mui/material";
-import { isPropertySignature } from "typescript";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { PaymentDetail } from "../../../models/PaymentDetail";
 
 const validationSchema = Yup.object().shape({
@@ -17,9 +22,9 @@ const validationSchema = Yup.object().shape({
     .min(2, "Name on card is too short!")
     .max(20, "Name on card is too long!")
     .required("Name on card is required"),
-  cardType: Yup.string().required("Year is required"),
+  cardType: Yup.string().required("Card type is required"),
   cardNumber: Yup.string()
-    .min(2, "Card number is too short!")
+    .min(16, "Card number is too short!")
     .max(20, "Card number is too long!")
     .required("Card number is required"),
   expirationMonth: Yup.number()
@@ -39,7 +44,8 @@ type Props = {
 };
 
 export const PaymentForm = (props: Props) => {
-  const { oktaAuth, authState } = useOktaAuth();
+
+  let payment = new PaymentDetail();
 
   const formik = useFormik({
     initialValues: {
@@ -53,7 +59,6 @@ export const PaymentForm = (props: Props) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      let payment = new PaymentDetail();
       payment.nameOnCard = values.nameOnCard;
       payment.cardType = values.cardType;
       payment.cardNumber = values.cardNumber;
@@ -108,23 +113,44 @@ export const PaymentForm = (props: Props) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  id="cardType"
-                  name="cardType"
-                  label="Card Type"
-                  fullWidth
-                  autoComplete="given-name"
-                  variant="standard"
-                  value={formik.values.cardType}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                <FormControl
                   error={
                     formik.touched.cardType && Boolean(formik.errors.cardType)
                   }
-                  helperText={formik.touched.cardType && formik.errors.cardType}
-                />
+                >
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Card Type
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="cardType"
+                    value={formik.values.cardType}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <FormControlLabel
+                      value="Visa"
+                      control={<Radio />}
+                      label="Visa"
+                    />
+                    <FormControlLabel
+                      value="Mastercard"
+                      control={<Radio />}
+                      label="Mastercard"
+                    />
+                    <FormControlLabel
+                      value="American Express"
+                      control={<Radio />}
+                      label="American Express"
+                    />
+                  </RadioGroup>
+                  <FormHelperText>
+                    {formik.touched.cardType && formik.errors.cardType}
+                  </FormHelperText>
+                </FormControl>
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required

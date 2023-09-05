@@ -1,54 +1,71 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
-import { ChangeEvent, useRef } from "react";
-import { OrderItem } from "../../models/OrderItem";
-import { Order } from "../../models/Order";
-import { Purchase } from "../../models/Purchase";
 import { Customer } from "../../models/Customer";
-import { Address } from "../../models/Address";
 import { useOktaAuth } from "@okta/okta-react";
+import { Formik, Field, Form, FormikHelpers } from "formik";
+import { AddressForm } from "./component/AddressForm";
+import CssBaseline from "@mui/material/CssBaseline";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Paper from "@mui/material/Paper";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+import { ReviewForm } from "./component/ReviewForm";
+import { PaymentForm } from "./component/PaymentForm";
+import { Address } from "../../models/Address";
+import { PaymentDetail } from "../../models/PaymentDetail";
+import { Order } from "../../models/Order";
+import { OrderItem } from "../../models/OrderItem";
+import { Purchase } from "../../models/Purchase";
+import { Container } from "@mui/material";
 
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" to="https://www.google.com">
+        Starry Accessory
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
-export const Checkout = () => {
-const { oktaAuth, authState } = useOktaAuth();
-  const shippingStreetInputRef = useRef<HTMLInputElement>(null);
-  const billingStreetInputRef = useRef<HTMLInputElement>(null);
-  const shippingCityInputRef = useRef<HTMLInputElement>(null);
-  const billingCityInputRef = useRef<HTMLInputElement>(null);
-  const shippingCountryInputRef = useRef<HTMLInputElement>(null);
-  const billingCountryInputRef = useRef<HTMLInputElement>(null);
-  const shippingZipCodeInputRef = useRef<HTMLInputElement>(null);
-  const billingZipCodeInputRef = useRef<HTMLInputElement>(null);
+const steps = ["Info & Address", "Payment details", "Review your order"];
 
-  const { cartItems, totalPrice, totalQuantity, resetCart } = useLocalShoppingCart();
-  const navigate = useNavigate();
+export const Checkout: React.FC = () => {
+  const [customer, setCustomer] = useState<Customer>();
+  const [shippingAddress, setShippingAddress] = useState<Address>();
+  const [billingAddress, setbillingAddress] = useState<Address>();
+  const [payment, setPayment] = useState<PaymentDetail>();
+  // const [trackingNumber, setTrackingNumber ] = useState();
 
-  function submitOrder(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log(e);
-    const formData = new FormData(e.target as HTMLFormElement);
+  const handleSubmitFromAddressForm = (
+    customer: Customer,
+    shippingAddress: Address,
+    billingAddress: Address
+  ) => {
+    console.log(customer);
+    setCustomer(customer);
+    console.log(shippingAddress);
+    setShippingAddress(shippingAddress);
+    setbillingAddress(billingAddress);
+    console.log(billingAddress);
+    handleNext();
+  };
 
-    const data = Object.fromEntries(formData) as { [key: string]: string };
-    console.log(data.billingCity);
-    console.log(data.firstName);
+  const handleSubmitFromPaymentForm = (payment: PaymentDetail) => {
+    console.log(payment);
+    setPayment(payment);
+    handleNext();
+  };
 
-    let customer = new Customer();
-    customer.firstName = data.firstName;
-    customer.lastName = data.lastName;
-    customer.email = data.email;
-
-    let shippingAddress = new Address();
-    shippingAddress.street = data.shippingStreet;
-    shippingAddress.city = data.shippingCity;
-    shippingAddress.country = data.shippingCountry;
-    shippingAddress.zipCode = data.shippingZipCode;
-
-    let billingAddress = new Address();
-    billingAddress.street = data.billingStreet;
-    billingAddress.city = data.billingCity;
-    billingAddress.country = data.billingCountry;
-    billingAddress.zipCode = data.billingZipCode;
-
+  function submitOrder() {
     let order = new Order();
     order.totalPrice = totalPrice;
     order.totalQuantity = totalQuantity;
@@ -58,9 +75,9 @@ const { oktaAuth, authState } = useOktaAuth();
     );
 
     let purchase = new Purchase();
-    purchase.customer = customer;
-    purchase.shippingAddress = shippingAddress;
-    purchase.billingAddress = billingAddress;
+    purchase.customer = customer!;
+    purchase.shippingAddress = shippingAddress!;
+    purchase.billingAddress = billingAddress!;
     purchase.order = order;
     purchase.orderItems = orderItems;
 
@@ -97,292 +114,114 @@ const { oktaAuth, authState } = useOktaAuth();
 
   const resetCartAndGoHome = () => {
     resetCart();
-    navigate('/');
-  }
+    // navigate('/');
+    handleNext();
+  };
 
-  function setBillingAddress(e: ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
-      billingStreetInputRef.current!.value =
-        shippingStreetInputRef.current!.value;
-      billingCityInputRef.current!.value = shippingCityInputRef.current!.value;
-      billingCountryInputRef.current!.value =
-        shippingCountryInputRef.current!.value;
-      billingZipCodeInputRef.current!.value =
-        shippingZipCodeInputRef.current!.value;
-      console.log("checked");
-    } else {
-      billingStreetInputRef.current!.value = "";
-      billingCityInputRef.current!.value = "";
-      billingCountryInputRef.current!.value = "";
-      billingZipCodeInputRef.current!.value = "";
-      console.log("not checked");
+  function getStepContent(step: number) {
+    switch (step) {
+      case 0:
+        return (
+          <AddressForm
+            customer={customer}
+            shippingAddress={shippingAddress}
+            billingAddress={billingAddress}
+            onsubmit={(customer, shippingAddress, billingAddress) =>
+              handleSubmitFromAddressForm(
+                customer,
+                shippingAddress,
+                billingAddress
+              )
+            }
+          />
+        );
+      case 1:
+        return (
+          <PaymentForm
+            handleBack={handleBack}
+            payment={payment}
+            onsubmit={(payment) => handleSubmitFromPaymentForm(payment)}
+          />
+        );
+      case 2:
+        return (
+          <ReviewForm
+            customer={customer}
+            shippingAddress={shippingAddress}
+            billingAddress={billingAddress}
+            payment={payment}
+            handleBack={handleBack}
+            onsubmit={submitOrder}
+          />
+        );
+      default:
+        throw new Error("Unknown step");
     }
   }
 
+  const { oktaAuth, authState } = useOktaAuth();
+  const { cartItems, totalPrice, totalQuantity, resetCart } =
+    useLocalShoppingCart();
+  const navigate = useNavigate();
+
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
+
   return (
-    <div className="container">
-      <h2>Checkout </h2>
-      <hr />
-      <form onSubmit={submitOrder}>
-        <div className="form-area">
-          <h4 className="mb-4">Customer informatiom</h4>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>First Name</label>
-            </div>
-            <div className="col-9">
-              <input type="text" name="firstName" />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Last Name</label>
-            </div>
-            <div className="col-9">
-              <input type="text" name="lastName" />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Email</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input type="text" name="email" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <br />
-        <br />
-
-        <div className="form-area">
-          <h4 className="mb-4">Shipping Address</h4>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Street</label>
-            </div>
-            <div className="col-9">
-              <input
-                type="text"
-                name="shippingStreet"
-                ref={shippingStreetInputRef}
-              />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>City</label>
-            </div>
-            <div className="col-9">
-              <input
-                type="text"
-                name="shippingCity"
-                ref={shippingCityInputRef}
-              />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Country</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input
-                  type="text"
-                  name="shippingCountry"
-                  ref={shippingCountryInputRef}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Zip code</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input
-                  type="text"
-                  name="shippingZipCode"
-                  ref={shippingZipCodeInputRef}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <br />
-
-        <div className="input-space">
-          <label className="au-checkbox">
-            <input
-              type="checkbox"
-              onChange={(e) => {
-                setBillingAddress(e);
-              }}
-            />
-            <span className="au-checkmark"></span>Billing Address same as
-            Shipping Address
-          </label>
-        </div>
-
-        <br />
-        <br />
-
-        <div className="form-area">
-          <h4 className="mb-4">Billing Address</h4>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Street</label>
-            </div>
-            <div className="col-9">
-              <input
-                type="text"
-                name="billingStreet"
-                ref={billingStreetInputRef}
-              />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>City</label>
-            </div>
-            <div className="col-9">
-              <input type="text" name="billingCity" ref={billingCityInputRef} />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Country</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input
-                  type="text"
-                  name="billingCountry"
-                  ref={billingCountryInputRef}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Zip Code</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input
-                  type="text"
-                  name="billingZipCode"
-                  ref={billingZipCodeInputRef}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <br />
-        <br />
-
-        <div className="form-area">
-          <h4 className="mb-4">Payment Informatiom</h4>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Card Type</label>
-            </div>
-            <div className="col-9">
-              <select name="cardType">
-                <option value="Visa">Visa</option>
-                <option value="Mastercard">Mastercard</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Name on Card</label>
-            </div>
-            <div className="col-9">
-              <input type="text" name="nameOnCard" />
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Card Number</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input type="text" name="cardNumber" />
-              </div>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Security Code</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input type="text" name="securityCode" />
-              </div>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Expiration Month</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input type="text" name="expirationMonth" />
-              </div>
-            </div>
-          </div>
-
-          <div className="row my-2">
-            <div className="col-3">
-              <label>Expiration Year</label>
-            </div>
-            <div className="col-9">
-              <div className="input-space">
-                <input type="text" name="expirationYear" />
-              </div>
-            </div>
-          </div>
-
-          <br />
-          <br />
-        </div>
-
-        <div className="form-area">
-          <h4 className="mb-4">Review Your Order</h4>
-
-          <p>Total Quantity: {totalQuantity}</p>
-          <p>Shipping: free</p>
-          <p>Total Price: CHF {totalPrice}</p>
-        </div>
-
-        <div className="text-center m-5">
-          <button type="submit" className="btn btn-success">
-            Purchase
-          </button>
-        </div>
-      </form>
-    </div>
+    <React.Fragment>
+      <CssBaseline />
+      <AppBar
+        position="absolute"
+        color="default"
+        elevation={0}
+        sx={{
+          position: "relative",
+          borderBottom: (t) => `1px solid ${t.palette.divider}`,
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6" color="inherit" noWrap></Typography>
+        </Toolbar>
+      </AppBar>
+      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+        <Paper
+          variant="outlined"
+          sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+        >
+          <Typography component="h1" variant="h4" align="center">
+            Checkout
+          </Typography>
+          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <React.Fragment>
+              <Typography variant="h5" gutterBottom>
+                Thank you for your order.
+              </Typography>
+              <Typography variant="subtitle1">
+                Your order number is #2001539. We have emailed your order
+                confirmation, and will send you an update when your order has
+                shipped.
+              </Typography>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>{getStepContent(activeStep)}</React.Fragment>
+          )}
+        </Paper>
+        <Copyright />
+      </Container>
+    </React.Fragment>
   );
 };
