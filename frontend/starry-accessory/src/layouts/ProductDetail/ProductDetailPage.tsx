@@ -42,7 +42,7 @@ const productId = window.location.pathname.split("/")[2];
             )}
           </div>
           <div className="col-5 container">
-            <div className="ml-2">
+            <div className="">
               <h2>{product?.name}</h2>
               <h5 className="text-primary">CHF {product?.unitPrice} </h5>
               <p className="lead"> {product?.description}</p>
@@ -77,13 +77,12 @@ const productId = window.location.pathname.split("/")[2];
           )}
         </div>
         <div className="mt-4">
-          <div className="ml-2">
+          <div className="mx-3">
             <h2> {product?.name}</h2>
             <h5 className="text-primary"> CHF {product?.unitPrice}</h5>
             <p className="lead"> {product?.description}</p>
           </div>
         </div>
-        <hr />
         <CartBox
           product={product}
           mobile={true}

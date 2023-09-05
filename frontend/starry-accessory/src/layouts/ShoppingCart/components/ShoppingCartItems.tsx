@@ -6,6 +6,7 @@ import { CartItem } from "../../../models/CartItem";
 
 export const ShoppingCartItems: React.FC<{
   cartItem: CartItem;
+  cartItems: CartItem[];
   removeProductFromCart: (cartItem: { id: number }) => void;
   increaseProductFromCart: (cartItem: { id: number }) => void;
 }> = (props) => {
@@ -56,7 +57,8 @@ export const ShoppingCartItems: React.FC<{
             </div>
           </div>
         </div>
-        <hr />
+        {props.cartItems.indexOf(props.cartItem) !==
+          props.cartItems.length - 1 && <hr />}
       </div>
       <div className="container d-md-none mt-5 text-center">
         <div className="d-flex justify-content-center align-items-center">
@@ -101,7 +103,8 @@ export const ShoppingCartItems: React.FC<{
             </button>
           </div>
         </div>
-        <hr />
+        {props.cartItems.indexOf(props.cartItem) !==
+          props.cartItems.length - 1 && <hr />}
       </div>
     </div>
   );

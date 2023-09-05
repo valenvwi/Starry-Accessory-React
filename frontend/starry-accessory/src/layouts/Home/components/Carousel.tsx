@@ -122,7 +122,7 @@ export const Carousel = () => {
         </div>
       </div>
 
-      <div className="homepage-carousel-title mt-3">
+      <div className="homepage-carousel-title mb-2">
         <Link className="btn btn-outline-secondary btn-lg" to="/search">
           View More
         </Link>

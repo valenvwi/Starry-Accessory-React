@@ -26,6 +26,7 @@ export const ShoppingCart = () => {
                 {cartItems.map((item) => (
                   <ShoppingCartItems
                     cartItem={item}
+                    cartItems={cartItems}
                     key={item.id}
                     removeProductFromCart={removeProductFromCart}
                     increaseProductFromCart={increaseProductFromCart}

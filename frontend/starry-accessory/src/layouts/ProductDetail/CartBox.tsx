@@ -45,7 +45,7 @@ export const CartBox: React.FC<{
       }
     }
     return (
-      <Link to="/login" className="btn btn-success btn-lg my-3">
+      <Link to="/login" className="btn btn-success btn-lg my-2">
         Log in
       </Link>
     );
@@ -53,24 +53,24 @@ export const CartBox: React.FC<{
 
   return (
     <div
-      className={props.mobile ? "card d-flex mt-5" : "card col-3 d-flex mb-5"}
+      className={props.mobile ? "card d-flex my-4 text-center" : "card col-3 d-flex mb-5"}
     >
       <div className="card-body container">
-        <div className="mt-3">
+        <div className="mt-2">
           {props.product && props.product.availableStock > 0 ? (
-            <h4 className="text-success py-3">Available</h4>
+            <h4 className={props.mobile ? "text-success mt-0" :"text-success py-3"}>Available</h4>
           ) : (
-            <h4 className="text-danger py-3">Wait List</h4>
+            <h4 className="text-danger py-3">Sold out</h4>
           )}
         </div>
         {buttonRender()}
 
         {!authState.isAuthenticated ? (
-          <p className="mt-3">Log in to be able to add this into the cart.</p>
+          <p className={props.mobile ? "mb-2" :"mt-3"}>Log in to be able to add this into the cart.</p>
         ) : (
           <>
             <hr />
-            <p className="mt-4">
+            <p className={props.mobile ? "mb-2" :"mt-4"}>
               <b>{props.totalQuantity} </b>
               items in your shopping cart
             </p>
