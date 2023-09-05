@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 import { ChangeEvent, useRef } from "react";
-import { OrderHistory } from "../../models/OrderHistory";
 import { OrderItem } from "../../models/OrderItem";
 import { Order } from "../../models/Order";
 import { Purchase } from "../../models/Purchase";

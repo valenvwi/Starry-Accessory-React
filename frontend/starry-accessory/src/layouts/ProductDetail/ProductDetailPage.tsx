@@ -5,20 +5,12 @@ import { useFetchProduct } from "../Utils/useFetchProduct";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 
 export const ProductDetailPage = () => {
-const { authState } = useOktaAuth();
-const productId = window.location.pathname.split("/")[2];
+  const { authState } = useOktaAuth();
+  const productId = window.location.pathname.split("/")[2];
 
+  const { product } = useFetchProduct(productId);
 
-  const {
-    product
-  } = useFetchProduct(productId);
-
-  const {
-    cartItems,
-    totalQuantity,
-    addProductToCart
-  } = useLocalShoppingCart()
-
+  const { cartItems, totalQuantity, addProductToCart } = useLocalShoppingCart();
 
   return (
     <div>
