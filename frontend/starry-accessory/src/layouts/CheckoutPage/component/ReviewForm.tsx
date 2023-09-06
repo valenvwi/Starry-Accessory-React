@@ -31,12 +31,33 @@ export const ReviewForm = (props: Props) => {
       </Typography>
       <List disablePadding>
         {cartItems.map((item) => (
-          <ListItem key={item.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={item.name} secondary={item.quantity} />
+          <ListItem key={item.name} sx={{ py:1, px: 0 }}>
+            <img
+            src={item.imageUrl}
+            width="80"
+            height="80"
+            alt={item.name}
+          />
+            <ListItemText 
+            primary={item.name}
+            secondary={
+              <React.Fragment>
+              <Typography
+                sx={{ display: 'inline' }}
+                component="span"
+                variant="body2"
+                color="text.primary"
+              >
+                Qty: 
+              </Typography>
+              {item.quantity}
+            </React.Fragment>
+            }
+            sx={{ px: 2 }}/>
             <Typography variant="body2">{item.unitPrice}</Typography>
           </ListItem>
         ))}
-        <ListItem sx={{ py: 1, px: 0 }}>
+        <ListItem sx={{ py: 2, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             {totalPrice}
@@ -55,7 +76,7 @@ export const ReviewForm = (props: Props) => {
             {props.shippingAddress?.street}, {props.shippingAddress?.city} ,
             {props.shippingAddress?.zipCode}, {props.shippingAddress?.country}
           </Typography>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
             Billing
           </Typography>
           <Typography gutterBottom>

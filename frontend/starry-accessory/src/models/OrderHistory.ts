@@ -5,6 +5,13 @@ export class OrderHistory {
     public totalPrice: number,
     public totalQuantity: number,
     public status: any,
-    public dateCreated: string
+    public dateCreated: string,
+    public orderItems: {
+      name: string | null;
+      imageUrl: string | null;
+      unitPrice: number;
+      quantity: number;
+      productId: string;
+    }[]
   ) {}
 }

@@ -7,7 +7,7 @@ export const Follow = () => {
           <p className="lead">
             Follow us on Instagram and you will get the latest products details!
           </p>
-          <div className="d-grid gap-2 justify-content-md-start mb-4 mb-lg-3">
+          <div className="d-grid gap-2 justify-content-md-end mb-4 mb-lg-3">
             <a
               className="btn main-color btn-lg text-white"
               href="https://www.instagram.com/starry_accessory_macau/"

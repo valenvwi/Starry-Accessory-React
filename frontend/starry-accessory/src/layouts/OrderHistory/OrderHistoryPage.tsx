@@ -2,44 +2,24 @@ import { useOktaAuth } from "@okta/okta-react";
 import { useEffect, useState } from "react";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { OrderHistory } from "../../models/OrderHistory";
-import { OrderHistoryTable } from "./OrderHistoryTable";
+import { useFetchUserEmail } from "../Utils/useFetchUserEmail";
+import { Link } from "react-router-dom";
+import { OrderHistoryBox } from "./OrderHistoryBox";
 
 export const OrderHistoryPage = () => {
-  const { oktaAuth, authState } = useOktaAuth();
+  const { authState } = useOktaAuth();
   const [orders, setOrders] = useState<OrderHistory[]>();
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+  const userEmail = useFetchUserEmail();
 
   useEffect(() => {
-    console.log("useeffect");
-    const fetchUserEmail = async () => {
-      console.log("fetchUserEmail", authState);
-      if (authState && authState.isAuthenticated) {
-        const url = `http://localhost:8080/checkout/getEmail`;
-        const requestOptions = {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        };
-        const response = await fetch(url, requestOptions);
-
-        if (!response.ok) {
-          throw new Error("Something went wrong");
-        }
-        const responseText = await response.text();
-        console.log(`useremail: ${responseText}`);
-        return responseText;
-      }
-    };
-
     const fetchOrders = async () => {
       console.log("fetchOrders", authState?.isAuthenticated);
-      if (authState && authState.isAuthenticated) {
-        const userEmail = await fetchUserEmail();
+      if (authState && authState.isAuthenticated && userEmail) {
+        // const userEmail = await fetchUserEmail();
         const url = `http://localhost:8080/orders/search/findByCustomerEmailOrderByDateCreatedDesc?email=${userEmail}`;
         const requestOptions = {
           method: "GET",
@@ -67,19 +47,17 @@ export const OrderHistoryPage = () => {
           totalQuantity: order.totalQuantity,
           status: order.status,
           dateCreated: order.dateCreated,
+          orderItems: order.orderItems,
         }));
         setOrders(loadedOrders);
-        console.log(loadedOrders);
-        console.log(orders);
         setIsLoading(false);
       }
     };
-
     fetchOrders().catch((error: any) => {
       setIsLoading(false);
       setHttpError(error.message);
     });
-  }, [authState]);
+  }, [authState, authState?.isAuthenticated, userEmail]);
 
   if (isLoading) {
     return <SpinnerLoading />;
@@ -95,30 +73,23 @@ export const OrderHistoryPage = () => {
 
   return (
     <div className="container">
-      <h3 className="my-3">Order history</h3>
       {orders && orders.length > 0 ? (
         <div>
-          <table className="table table-striped mt-4">
-            <thead>
-              <tr>
-                <th scope="col"> </th>
-                <th scope="col"> Date</th>
-                <th scope="col"> Total Price</th>
-                <th scope="col"> Total Quantity</th>
-                <th scope="col"> Tracking Number</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {orders.map((order) => (
-                <OrderHistoryTable order={order} key={order.id} />
-              ))}
-            </tbody>
-          </table>
+          <h3 className="pt-4 px-3 pb-4">Your Orders</h3>
+          {orders.map((order) => (
+            <OrderHistoryBox order={order} key={order.id} />
+          ))}
         </div>
       ) : (
-        <div className="alert alert-warning col-md-12" role="alert">
-          No orders found.
+        <div className="container d-flex justify-content-center flex-column align-items-center">
+          <h3 className="my-5 pt-5 ">Place your first order now!</h3>
+          <Link
+            type="button"
+            className="btn main-color btn-md p-3 fw-bold text-white"
+            to="/search"
+          >
+            Shop now
+          </Link>
         </div>
       )}
     </div>

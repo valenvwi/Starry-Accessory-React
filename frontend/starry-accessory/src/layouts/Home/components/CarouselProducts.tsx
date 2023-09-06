@@ -27,7 +27,7 @@ export const CarouselProducts: React.FC<{ product: ProductModel }> = (
         <p>CHF {props.product.unitPrice}</p>
         <Link
           className="btn main-color text-white"
-          to={`/checkout/${props.product.id}`}
+          to={`/product/${props.product.id}`}
         >
           Reserve
         </Link>

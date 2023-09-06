@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Formik, Field, Form, FormikHelpers, useFormik } from "formik";
+import { Formik, Form, useFormik } from "formik";
 import { Customer } from "../../../models/Customer";
 import { useOktaAuth } from "@okta/okta-react";
 import { useLocalShoppingCart } from "../../Utils/useLocalShoppingCart";
@@ -23,14 +23,13 @@ const validationSchema = Yup.object().shape({
     .min(2, "Last name is too short!")
     .max(20, "Last name is too long!")
     .required("Last name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
   shippingStreet: Yup.string()
     .min(2, "Street is too short!")
     .max(20, "Street is too long!")
     .required("Street is required"),
   shippingCity: Yup.string()
     .min(2, "City is too short!")
-    .max(20, "City is too long!")
+    .max(15, "City is too long!")
     .required("City is required"),
   shippingCountry: Yup.string()
     .min(2, "Country is too short!")
@@ -38,7 +37,7 @@ const validationSchema = Yup.object().shape({
     .required("Country is required"),
   shippingZipCode: Yup.string()
     .min(2, "Zip Code is too short!")
-    .max(20, "Zip Code is too long!")
+    .max(16, "Zip Code is too long!")
     .required("Zip Code is required"),
   billingStreet: Yup.string()
     .min(2, "Street is too short!")
@@ -46,7 +45,7 @@ const validationSchema = Yup.object().shape({
     .required("Street is required"),
   billingCity: Yup.string()
     .min(2, "City is too short!")
-    .max(20, "City is too long!")
+    .max(15, "City is too long!")
     .required("City is required"),
   billingCountry: Yup.string()
     .min(2, "Country is too short!")
@@ -54,7 +53,7 @@ const validationSchema = Yup.object().shape({
     .required("Country is required"),
   billingZipCode: Yup.string()
     .min(2, "Zip Code is too short!")
-    .max(20, "Zip Code is too long!")
+    .max(16, "Zip Code is too long!")
     .required("Zip Code is required"),
 });
 
@@ -62,6 +61,7 @@ type Props = {
   customer?: Customer;
   shippingAddress?: Address;
   billingAddress?: Address;
+  userEmail: string;
   onsubmit: (
     customer: Customer,
     shippAddress: Address,
@@ -83,7 +83,6 @@ export const AddressForm = (props: Props) => {
     initialValues: {
       firstName: props.customer?.firstName || "",
       lastName: props.customer?.lastName || "",
-      email: props.customer?.email || "",
       shippingStreet: props.shippingAddress?.street || "",
       shippingCity: props.shippingAddress?.city || "",
       shippingCountry: props.shippingAddress?.country || "",
@@ -99,7 +98,7 @@ export const AddressForm = (props: Props) => {
       let customer = new Customer();
       customer.firstName = values.firstName;
       customer.lastName = values.lastName;
-      customer.email = values.email;
+      customer.email = props.userEmail;
 
       let shippingAddress = new Address();
       shippingAddress.street = values.shippingStreet;
@@ -112,6 +111,7 @@ export const AddressForm = (props: Props) => {
       billingAddress.city = values.billingCity;
       billingAddress.country = values.billingCountry;
       billingAddress.zipCode = values.billingZipCode;
+      console.log("Address form on submit");
       props.onsubmit(customer, shippingAddress, billingAddress);
     },
   });
@@ -141,7 +141,6 @@ export const AddressForm = (props: Props) => {
         initialValues={{
           firstName: "",
           lastName: "",
-          email: "",
           shippingStreet: "",
           shippingCity: "",
           shippingCountry: "",
@@ -193,22 +192,6 @@ export const AddressForm = (props: Props) => {
                     formik.touched.lastName && Boolean(formik.errors.lastName)
                   }
                   helperText={formik.touched.lastName && formik.errors.lastName}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  id="email"
-                  name="email"
-                  label="Email"
-                  fullWidth
-                  autoComplete="shipping address-line1"
-                  variant="standard"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
 

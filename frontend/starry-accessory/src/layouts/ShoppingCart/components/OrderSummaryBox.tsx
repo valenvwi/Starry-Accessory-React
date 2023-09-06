@@ -43,7 +43,7 @@ export const OrderSummaryBox: React.FC<{
 
         <Link
           to="/checkout"
-          className="btn btn-success btn-lg d-flex justify-content-center align-items-center"
+          className="btn main-color btn-md p-2 fw-bold text-white d-flex justify-content-center align-items-center"
         >
           Check out
         </Link>

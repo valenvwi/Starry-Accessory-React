@@ -49,7 +49,7 @@ export const App = () => {
             <Route path="/checkout" element={<Checkout />}></Route>
             <Route path="/orderhistory" element={<OrderHistoryPage />}></Route>
             <Route
-              path="/checkout/:productId"
+              path="/product/:productId"
               element={<ProductDetailPage />}
             ></Route>
             <Route path="/" element={<HomePage />}></Route>

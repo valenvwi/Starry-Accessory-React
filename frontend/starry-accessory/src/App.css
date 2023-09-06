@@ -23,6 +23,10 @@
   background-color: #33cde4;
 }
 
+.main-color:hover {
+  background-color:rgb(48, 107, 236);
+}
+
 .col-image-left {
   background-image: url("./images/earrings/black-beauty.JPG");
   height: 25em !important;
@@ -63,4 +67,8 @@
 
 .icon-minus-margin{
   margin-left: -14px;
+}
+
+.custom-text {
+  font-size: 18px;
 }

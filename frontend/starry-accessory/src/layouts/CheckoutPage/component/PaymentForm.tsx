@@ -17,15 +17,22 @@ import {
 } from "@mui/material";
 import { PaymentDetail } from "../../../models/PaymentDetail";
 
+function validateCardNumber(cardNumber: string): boolean {
+  return /^\d{16}$/.test(cardNumber);
+}
+
 const validationSchema = Yup.object().shape({
+
+
   nameOnCard: Yup.string()
     .min(2, "Name on card is too short!")
     .max(20, "Name on card is too long!")
     .required("Name on card is required"),
   cardType: Yup.string().required("Card type is required"),
   cardNumber: Yup.string()
-    .min(16, "Card number is too short!")
-    .max(20, "Card number is too long!")
+  .test('cardNumber', 'Invalid card number', (value) =>
+  value ? validateCardNumber(value) : true
+)
     .required("Card number is required"),
   expirationMonth: Yup.number()
     .min(1, "Expiration month is not valid!")
@@ -237,15 +244,6 @@ export const PaymentForm = (props: Props) => {
                   helperText={
                     formik.touched.securityCode && formik.errors.securityCode
                   }
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox color="secondary" name="saveCard" value="yes" />
-                  }
-                  label="Remember credit card details for next time"
                 />
               </Grid>
             </Grid>

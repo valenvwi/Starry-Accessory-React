@@ -14,17 +14,6 @@ export const useFetchProduct = (productId: string) => {
         throw new Error("Something went wrong");
       }
       const responseJson = await response.json();
-      // const loadedProduct: ProductModel = {
-      //   id: responseJson.id,
-      //   name: responseJson.name,
-      //   description: responseJson.description,
-      //   unitPrice: responseJson.unitPrice,
-      //   stock: responseJson.stock,
-      //   availableStock: responseJson.availableStock,
-      //   imageUrl: responseJson.imageUrl,
-      //   dateCreated: responseJson.dateCreated,
-      //   category: responseJson.category,
-      // };
       const loadedProduct: ProductModel = {
         id: responseJson.id,
         name: responseJson.name,

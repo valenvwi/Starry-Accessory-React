@@ -53,7 +53,7 @@ export const SearchProduct: React.FC<{ product: ProductModel }> = (props) => {
         <div className="col-md-2 d-flex justify-content-center align-items-center">
           <Link
             className="btn btn-md main-color text-white"
-            to={`/checkout/${props.product.id}`}
+            to={`/product/${props.product.id}`}
           >
             View details
           </Link>

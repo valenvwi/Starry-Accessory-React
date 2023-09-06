@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
 import { Customer } from "../../models/Customer";
 import { useOktaAuth } from "@okta/okta-react";
-import { Formik, Field, Form, FormikHelpers } from "formik";
 import { AddressForm } from "./component/AddressForm";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
@@ -11,7 +10,6 @@ import Paper from "@mui/material/Paper";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { ReviewForm } from "./component/ReviewForm";
@@ -22,6 +20,7 @@ import { Order } from "../../models/Order";
 import { OrderItem } from "../../models/OrderItem";
 import { Purchase } from "../../models/Purchase";
 import { Container } from "@mui/material";
+import { useFetchUserEmail } from "../Utils/useFetchUserEmail";
 
 function Copyright() {
   return (
@@ -43,7 +42,8 @@ export const Checkout: React.FC = () => {
   const [shippingAddress, setShippingAddress] = useState<Address>();
   const [billingAddress, setbillingAddress] = useState<Address>();
   const [payment, setPayment] = useState<PaymentDetail>();
-  // const [trackingNumber, setTrackingNumber ] = useState();
+  const [trackingNumber, setTrackingNumber] = useState(String);
+  const userEmail = useFetchUserEmail();
 
   const handleSubmitFromAddressForm = (
     customer: Customer,
@@ -114,27 +114,32 @@ export const Checkout: React.FC = () => {
 
   const resetCartAndGoHome = () => {
     resetCart();
-    // navigate('/');
     handleNext();
+    fetchTrackingNumnber();
   };
 
   function getStepContent(step: number) {
     switch (step) {
       case 0:
-        return (
-          <AddressForm
-            customer={customer}
-            shippingAddress={shippingAddress}
-            billingAddress={billingAddress}
-            onsubmit={(customer, shippingAddress, billingAddress) =>
-              handleSubmitFromAddressForm(
-                customer,
-                shippingAddress,
-                billingAddress
-              )
-            }
-          />
-        );
+        if (userEmail) {
+          return (
+            <AddressForm
+              customer={customer}
+              shippingAddress={shippingAddress}
+              billingAddress={billingAddress}
+              userEmail={userEmail}
+              onsubmit={(customer, shippingAddress, billingAddress) =>
+                handleSubmitFromAddressForm(
+                  customer,
+                  shippingAddress,
+                  billingAddress
+                )
+              }
+            />
+          );
+        } else {
+          return null;
+        }
       case 1:
         return (
           <PaymentForm
@@ -162,7 +167,7 @@ export const Checkout: React.FC = () => {
   const { oktaAuth, authState } = useOktaAuth();
   const { cartItems, totalPrice, totalQuantity, resetCart } =
     useLocalShoppingCart();
-  const navigate = useNavigate();
+  console.log(cartItems);
 
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -172,6 +177,27 @@ export const Checkout: React.FC = () => {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const fetchTrackingNumnber = async () => {
+    console.log("fetchUserEmail", authState);
+    if (authState && authState.isAuthenticated) {
+      const url = `http://localhost:8080/orderHistory/getTrackingNumber`;
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      const responseText = await response.text();
+      setTrackingNumber(responseText);
+    }
   };
 
   return (
@@ -211,9 +237,9 @@ export const Checkout: React.FC = () => {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.
+                Your order number is #{trackingNumber}. We have emailed your
+                order confirmation, and will send you an update when your order
+                has shipped.
               </Typography>
             </React.Fragment>
           ) : (
