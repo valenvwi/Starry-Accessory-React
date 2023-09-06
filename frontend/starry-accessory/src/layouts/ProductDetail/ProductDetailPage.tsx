@@ -3,14 +3,18 @@ import { CartBox } from "./CartBox";
 import { useOktaAuth } from "@okta/okta-react";
 import { useFetchProduct } from "../Utils/useFetchProduct";
 import { useLocalShoppingCart } from "../Utils/useLocalShoppingCart";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
 
 export const ProductDetailPage = () => {
   const { authState } = useOktaAuth();
   const productId = window.location.pathname.split("/")[2];
 
-  const { product } = useFetchProduct(productId);
-
+  const { product, isLoading } = useFetchProduct(productId);
   const { cartItems, totalQuantity, addProductToCart } = useLocalShoppingCart();
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
 
   return (
     <div>
