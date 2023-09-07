@@ -11,6 +11,7 @@ export const Follow = () => {
             <a
               className="btn main-color btn-lg text-white"
               href="https://www.instagram.com/starry_accessory_macau/"
+              target="_blank" rel="noreferrer"
             >
               Follow
             </a>

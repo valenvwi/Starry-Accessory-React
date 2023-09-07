@@ -46,7 +46,7 @@ export const ShoppingCartItems: React.FC<{
                 {/* @ts-ignore */}
                 <FontAwesomeIcon icon={faSquareMinus} />
               </button>
-              <h5 className="mt-3 mx-5">Qty: {props.cartItem.quantity}</h5>
+              <h5 className="mt-3 mx-3 d-inline">Qty: {props.cartItem.quantity}</h5>
               <button
                 className="btn icon"
                 onClick={() => props.increaseProductFromCart(props.cartItem)}

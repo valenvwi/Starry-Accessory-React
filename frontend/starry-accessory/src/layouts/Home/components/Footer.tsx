@@ -18,9 +18,18 @@ export const Footer = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <a href="https://www.instagram.com/starry_accessory_macau/" className="nav-link px-2">
-            {/* @ts-ignore */}
-            <FontAwesomeIcon icon={faInstagram} style={{ color: "#e68ebd" }} /></a>
+            <a
+              href="https://www.instagram.com/starry_accessory_macau/"
+              className="nav-link px-2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FontAwesomeIcon
+                // @ts-ignore
+                icon={faInstagram}
+                style={{ color: "#e68ebd" }}
+              />
+            </a>
           </li>
         </ul>
       </footer>

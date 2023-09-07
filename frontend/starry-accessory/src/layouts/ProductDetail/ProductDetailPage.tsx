@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CartBox } from "./CartBox";
 import { useOktaAuth } from "@okta/okta-react";
 import { useFetchProduct } from "../Utils/useFetchProduct";
